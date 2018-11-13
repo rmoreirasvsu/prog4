@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="en">
+	<head>
+	</head>
+
+	<body onload="addForm();">
+		<h1>Prog04 by Ricardo Moreira</h1>
+		
+		<h2>Add input fields</h2>
+
+		<button style="margin-left:50px" class="button btn-primary" type="button" onclick="addLine(form1);">Add Person</button> <br /> <br />
+
+		<div id="inputDiv" class="container"></div>
+
+		<h2>Generate array of objects</h2>
+		
+		<button style="margin-left:50px" class="button btn-info" type="button" onclick="genObjectArray()";>Generate and Display Array of Objects</button> <br />
+
+		<div id="arrDiv" class="container"></div>
+
+		<h2>Display data from the array of objects</h2>
+
+		<button style="margin-left:50px" class="button btn-info" type="button" onclick="genTable()">Generate and Display Table</button> <br /> <br />
+
+		<div id="tableDiv" class="container"></div>
+
+
+		<script>
+
+var currentLine = 0;
+var inputWidth  = 8;
+var objArray    = [];
+
+function addForm() {
+	
+	var newelement = document.createElement("form");
+	newelement.setAttribute("id", "form1");
+	newelement.setAttribute("class", "container");
+	var inputDiv = document.getElementById("inputDiv");
+	inputDiv.appendChild(newelement);
+	addLine(form1);
+}
+
+function addLine(form1) {
+
+	var d = document.createElement("div");
+	var t = document.createTextNode("Hello World");
+	d.setAttribute("class", "row");
+	form1.appendChild(d);
+	addField(d, "givenname", "First Name: ", "text", "Rob");
+	addField(d, "surname", "Last Name: ", "text", "Robinson");	
+	addField(d, "solarBirthDay", "Solar Birth Day: ", "number", "1");
+	addField(d, "solarBirthMonth", "Solar Birth Month: ", "text", "January");
+	addField(d, "solarBirthYear", "Solar Birth Year: ", "number", "1980");
+	addField(d, "country", "Country: ", "text", "USA");
+	currentLine++;
+}
+
+function addField(row, inputName, labelText, dataType, placeholder) {
+
+	var d = document.createElement("div");
+	d.setAttribute("class", "col-sm col-md col-lg form-check-inline");
+
+	var n = document.createElement("label");
+	n.setAttribute("for", inputName+currentLine);
+	
+	var t = document.createTextNode(labelText + " ");
+	n.appendChild(t);
+	d.appendChild(n);
+	row.appendChild(d);
+
+	if (inputName == "country") {
+	
+		var n = document.createElement("select");
+		n.setAttribute("name", inputName+currentLine);
+		n.setAttribute("id", inputName+currentLine);
+		d.appendChild(n);
+
+		var n = document.createElement("option");
+		n.setAttribute("value", "USA");
+		
+		var textnode = document.createTextNode("USA");
+		n.appendChild(textnode);
+		
+		var f = document.getElementById(inputName+currentLine);
+		f.appendChild(n);
+
+		var n = document.createElement("option");
+		n.setAttribute("value", "China");
+		
+		var textnode = document.createTextNode("China");
+		n.appendChild(textnode);
+		f.appendChild(n);
+	}
+	else {
+		
+		var n = document.createElement("input");
+		n.setAttribute("name", inputName+currentLine);
+		n.setAttribute("id", inputName+currentLine);
+		n.setAttribute("type", dataType);
+		n.setAttribute("placeholder", placeholder);
+		n.setAttribute("size", inputWidth);
+		d.appendChild(n);
+	}
+}
+
+function genObjectArray() {
+
+	for (i = 0; i < currentLine; i++) {
+		objArray[i] = {
+			'givenname':document.getElementById("givenname"+i).value,
+			'surname':document.getElementById("surname"+i).value,
+			'solarBirthDay':document.getElementById("solarBirthDay"+i).value,
+			'solarBirthMonth':document.getElementById("solarBirthMonth"+i).value,
+			'solarBirthYear':document.getElementById("solarBirthYear"+i).value,
+			'country':document.getElementById("country"+i).value,
+			'age': function() {
+				var currentdate = new Date();
+				var year = currentdate.getFullYear();
+				return year - this.solarBirthYear;
+			},
+			'countryAge': function() {
+				if (this.country=='China') return parseInt(this.age())+1;
+				else return parseInt(this.age());
+			},
+			'zodiacSign': function() {
+				
+				if (this.country=='USA'){
+					if ((this.solarBirthMonth=='January' && this.solarBirthDay<=19) || (this.solarBrithMonth=='December' && this.solarBirthDay>=22)) return 'Capricorn';
+					else if ((this.solarBirthMonth=='January' && this.solarBirthDay>=20) || (this.solarBirthMonth=='February' && this.solarBirthDay<=18)) return 'Aquarius';
+					else if ((this.solarBirthMonth=='February' && this.solarBirthDay>=19) || (this.solarBirthMonth=='March' && this.solarBirthDay<=20)) return 'Pisces';
+					else if ((this.solarBirthMonth=='March' && this.solarBirthDay>=21) || (this.solarBirthMonth=='April' && this.solarBirthDay<=19)) return 'Aries';
+					else if ((this.solarBirthMonth=='April' && this.solarBirthDay>=20) || (this.solarBirthMonth=='May' && this.solarBirthDay<=20)) return 'Taurus';
+					else if ((this.solarBirthMonth=='May' && this.solarBirthDay>=21) || (this.solarBirthMonth=='June' && this.solarBirthDay<=20)) return 'Gemini';
+					else if ((this.solarBirthMonth=='June' && this.solarBirthDay>=21) || (this.solarBirthMonth=='July' && this.solarBirthDay<=22)) return 'Cancer';
+					else if ((this.solarBirthMonth=='July' && this.solarBirthDay>=23) || (this.solarBirthMonth=='August' && this.solarBirthDay<=22)) return 'Leo';
+					else if ((this.solarBirthMonth=='August' && this.solarBirthDay>=23) || (this.solarBirthMonth=='September' && this.solarBirthDay<=22)) return 'Virgo';
+					else if ((this.solarBirthMonth=='September' && this.solarBirthDay>=23) || (this.solarBirthMonth=='October' && this.solarBirthDay<=22)) return 'Libra';
+					else if ((this.solarBirthMonth=='October' && this.solarBirthDay>=23) || (this.solarBirthMonth=='November' && this.solarBirthDay<=21)) return 'Scorpio';
+					else return 'Sagittarius';
+				}
+				
+				else {
+					if (this.solarBirthYear%12==0) return 'Monkey';
+					else if (this.solarBirthYear%12==1) return 'Rooster';
+					else if (this.solarBirthYear%12==2) return 'Dog';
+					else if (this.solarBirthYear%12==3) return 'Pig';
+					else if (this.solarBirthYear%12==4) return 'Rat';
+					else if (this.solarBirthYear%12==5) return 'Ox';
+					else if (this.solarBirthYear%12==6) return 'Tiger';
+					else if (this.solarBirthYear%12==7) return 'Rabbit';
+					else if (this.solarBirthYear%12==8) return 'Dragon';
+					else if (this.solarBirthYear%12==9) return 'Snake';
+					else if (this.solarBirthYear%12==10) return 'Horse';
+					else return 'Sheep';
+				}
+			}
+		};
+	}
+	
+	var divContent = "<ol start='0'>";
+	objArray.forEach(function(e) {
+		divContent += '<li>';
+		divContent += JSON.stringify(e);
+		divContent += ' ... Age In Country: ' + e.countryAge();
+		divContent += '</li>';
+	});
+	divContent +="</ol>";
+	document.getElementById("arrDiv").innerHTML = divContent;
+}
+
+function genTable() {
+
+	var content = "<table border='1' class='table table-striped'>";
+	content+="<tr> <th>Local Name</th> <th>Local Date of Birth</th> <th>Local Age</th> <th>Zodiac Sign</th> </tr>";
+
+	for (i = 0;i < objArray.length; i++){
+		content+="<tr>";
+		if (objArray[i].country=='USA') {
+			content+="<td>" + objArray[i].givenname + " " + objArray[i].surname + "</td>";
+			content+="<td>" + objArray[i].solarBirthMonth + " " + objArray[i].solarBirthDay + ", " + objArray[i].solarBirthYear + "</td>";
+		}
+		else {
+			content+="<td>" + objArray[i].surname + " " + objArray[i].givenname + "</td>";
+			content+="<td>" + objArray[i].solarBirthYear + " " + objArray[i].solarBirthMonth + " " + objArray[i].solarBirthDay + "</td>";
+		}
+		content+="<td>" + objArray[i].countryAge() + "</td>";
+		content+="<td>" + objArray[i].zodiacSign() + "</td>";
+		content+="</tr>";
+	}
+	content+="</table>";
+	document.getElementById("tableDiv").innerHTML = content;
+}
+		</script>
+	</body>
+
+</html>
